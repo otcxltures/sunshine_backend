@@ -1,9 +1,10 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import engine, Base
 from app.routers import auth, courses, applications, announcements, school_info, inquiries
 
-# Import all models so Base.metadata knows about them
+
 from app.models.user import User
 from app.models.course import Course
 from app.models.application import Application
@@ -11,7 +12,7 @@ from app.models.announcement import Announcement
 from app.models.school_info import SchoolInfo
 from app.models.inquiry import Inquiry
 
-# Create database tables
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -48,3 +49,9 @@ def root():
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
